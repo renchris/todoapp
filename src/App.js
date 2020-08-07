@@ -22,7 +22,6 @@ function App() {
   const [sortIndex, setSortIndex] = useState(null);
 
   useEffect(() => {
-    console.log("App start");
     fetchTodos();
     setFormData({ ...formData, owner: Auth.user.username });
   }, []);
@@ -51,17 +50,13 @@ function App() {
   function compareBySelectedField() {
     switch (sortIndex) {
       case 1: //Name
-        console.log("case 1");
         return (a, b) => (a.name > b.name) - (a.name < b.name);
       case 2: //Category
-        console.log("case 2");
         return (a, b) => (a.category > b.category) - (a.category < b.category);
       case 3: //Owner
-        console.log("case 3");
         return (a, b) => (a.owner > b.owner) - (a.owner < b.owner);
       default:
         //case 0: Date Added
-        console.log("default");
         return (a, b) =>
           (a.createdAt > b.createdAt) - (a.createdAt < b.createdAt);
     }
@@ -70,16 +65,11 @@ function App() {
   async function deleteTodo({ id }) {
     const itemToDelete = todos.find((item) => item.id === id);
 
-    console.log("itemToDelete.owner: " + itemToDelete.owner);
-    console.log("Auth.currentUserInfo().username: " + Auth.user.username);
-
-    const same = itemToDelete.owner === Auth.user.username;
-
-    console.log("same: " + same);
+    const sameOwner = itemToDelete.owner === Auth.user.username;
 
     const feedbackElement = document.getElementById("feedback");
 
-    if (!same) {
+    if (!sameOwner) {
       const feedbackElement = document.getElementById("feedback");
       feedbackElement.textContent = "Can't delete someone else's item";
       return;
@@ -139,7 +129,7 @@ function App() {
 
       <small id="feedback">View all items, add and delete your own items</small>
 
-      <div class="list" style={{ marginBottom: 30 }}>
+      <div className="list" style={{ marginBottom: 30 }}>
         {todos.sort(compareBySelectedField()).map((todo) => (
           <div key={todo.id || todo.name}>
             <h2>{todo.name}</h2>
@@ -156,12 +146,5 @@ function App() {
     </div>
   );
 }
-
-/*
-            <p>{todo.category}</p>
-            <p>{todo.owner}</p>
-            <p>{todo.id}</p>
-            sortTodo(this.selectedIndex
-*/
 
 export default withAuthenticator(App);
